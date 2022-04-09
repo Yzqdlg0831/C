@@ -15,6 +15,7 @@ void My_multiplication_tables(int n)
 	}
 }
 
+
 int main()
 {
 	int n = 0;
