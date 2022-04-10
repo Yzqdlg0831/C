@@ -30,7 +30,7 @@ int Fibonacci2(int n)
 	return c;
 }
 
-int main()
+int main11()
 {
 	int n = 0;
 	scanf("%d", &n);
