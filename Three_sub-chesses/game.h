@@ -7,6 +7,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<time.h>
+#include<windows.h>
 
 //打印菜单
 void menu();
@@ -21,4 +22,4 @@ void PlayerMove(char board[ROW][COL]);
 //电脑下棋
 void PC_move(char board[ROW][COL]);
 
-int Is_Win(char board[ROW][COL], int row, int col);
+char Is_Win(char board[ROW][COL], int row, int col);

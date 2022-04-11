@@ -14,29 +14,33 @@ void game()
 	printf("你的棋子是：*\n");
 	char board[ROW][COL] = { 0 };
 	InitBoard(board, ROW, COL);//初始化棋盘
-	PlayerMove(board);//玩家下棋
-	PC_move(board);//电脑下棋
-	while (!Is_Win(board, ROW, COL))
+	while (1)
 	{
-		PlayerMove(board);
-		if (Is_Win(board, ROW, COL) != 3)
+		PlayerMove(board);//玩家下棋
+		if ('C' != Is_Win(board, ROW, COL))
 		{
-			PC_move(board);
+			break;
+		}
+		PC_move(board);//电脑下棋
+		if ('C' != Is_Win(board, ROW, COL))
+		{
+			break;
 		}
 	}
-	DisplayBoard(board, ROW, COL);
-	if (Is_Win(board, ROW, COL) == 1)
+	system("cls");
+	if (Is_Win(board, ROW, COL) ==  '*')
 	{
 		printf("险胜！\n");
 	}
-	else if (Is_Win(board, ROW, COL) == 2)
+	else if (Is_Win(board, ROW, COL) ==  'o')
 	{
 		printf("惜败！\n");
 	}
-	else if (Is_Win(board, ROW, COL) == 3)
+	else if (Is_Win(board, ROW, COL) ==  'Q')
 	{
 		printf("平局\n");
 	}
+	DisplayBoard(board, ROW, COL);//打印棋盘
 }
 
 void InitBoard(char board[ROW][COL], int row, int col)
@@ -82,27 +86,46 @@ void DisplayBoard(char board[ROW][COL], int row, int col)
 	}
 }
 
-//玩家:'*',电脑：'o'
+//玩家下棋
 void PlayerMove(char board[ROW][COL])
 {
 	int i = 0;
 	int j = 0;
+	system("cls");
 	DisplayBoard(board, ROW, COL);
-	printf("请输入下棋的坐标->");
-	scanf("%d%d", &i, &j);
-	while (board[i - 1][j - 1] == '*'|| board[i - 1][j - 1] == 'o')
+	printf("玩家下棋>");
+	while (1)
 	{
-		printf("不能选择这个位置,请重新选择坐标->");
 		scanf("%d%d", &i, &j);
-	}
-	board[i - 1][j - 1] = '*';
-}
 
+		if (i > 0 && i < 4 && j > 0 && j < 4)
+		{
+			if (board[i - 1][j - 1] == ' ')
+			{
+				board[i -1][j - 1] = '*';
+				break;
+			}
+			else
+			{
+				printf("该坐标已有棋子，请重新输入：");
+			}
+		}
+		else
+		{
+			printf("坐标非法！请重新输入：");
+		}
+	}
+
+}
+//电脑下棋
 void PC_move(char board[ROW][COL])
 {
 	int i = rand() % 3;
 	int j = rand() % 3;
-	while (board[i][j] == '*' || board[i][j] == 'o')
+	system("cls");
+	DisplayBoard(board, ROW, COL);
+	printf("电脑下棋>\n");
+	while (board[i][j] != ' ')
 	{
 		i = rand() % 3;
 		j = rand() % 3;
@@ -110,76 +133,57 @@ void PC_move(char board[ROW][COL])
 	board[i][j] = 'o';
 }
 
-int Is_Win(char board[ROW][COL], int row, int col)
+//判断棋盘是否已满，满了返回1，还有位置返回0
+int Is_full(char board[ROW][COL], int row, int col)
 {
-	int i = 0;
-	for (i = 0; i < row; i++)
-	{
-		//判断行是否全部相等，全是‘*’返回1，全是‘o’返回2
-		if (board[i][0] == board[i][1] && board[i][0] == board[i][2])
-		{
-			if (board[i][0] == '*')
-			{
-				return 1;
-			}
-			if (board[i][0] == 'o')
-			{
-				return 2;
-			}
-		}
-		//判断列是否全部相等，全是‘*’返回1，全是‘o’返回2
-		if ((board[0][i] == board[1][i]) && (board[0][i] == board[2][i]))
-		{
-			if (board[0][i] == '*')
-			{
-				return 1;
-			}
-			if (board[0][i] == 'o')
-			{
-				return 2;
-			}
-		}
-	}
-	//判断斜线是否相等
-	if (board[0][0] == board[1][1] && board[0][0] == board[2][2])
-	{
-		if (board[0][0] == '*')
-		{
-			return 1;
-		}
-		if (board[0][0] == 'o')
-		{
-			return 2;
-		}
-	}
-	if (board[0][2] == board[1][1] && board[0][2] == board[2][0])
-	{
-		if (board[0][0] == '*')
-		{
-			return 1;
-		}
-		if (board[0][0] == 'o')
-		{
-			return 2;
-		}
-	}
-	//棋盘下满了则返回3
-	int full = 1;
-	for (i = 0; i < row; i++)
+	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
 			if (board[i][j] == ' ')
 			{
-				full = 0;
-				break;
+				return 0;
 			}
 		}
 	}
-	if (full)
+	return 1;
+}
+
+//判断输赢
+//玩家赢：返回‘*’
+//电脑赢：返回‘o’
+//平局：返回‘Q’
+//继续：返回‘C’
+char Is_Win(char board[ROW][COL], int row, int col)
+{
+	int i = 0;
+	for (i = 0; i < row; i++)
 	{
-		return 3;
+		//判断行
+		if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] != ' ')
+		{
+			return board[i][0];
+		}
+		//判断列
+		if ((board[0][i] == board[1][i]) && (board[0][i] == board[2][i]) && board[0][i] != ' ')
+		{
+			return board[0][i];
+		}
 	}
-	//都没赢则返回0
-	return 0;
+	//判断对角线
+	if (board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[1][1] && board[1][1] != ' ')
+	{
+		return board[1][1];
+	}
+	if (board[0][2] == board[1][1] && board[0][2] == board[2][0] && board[1][1] && board[1][1] != ' ')
+	{
+		return board[1][1];
+	}
+	//平局返回‘Q’
+	if (Is_full(board,row,col))
+	{
+		return 'Q';
+	}
+	//都没赢则返回'C'
+	return 'C';
 }
