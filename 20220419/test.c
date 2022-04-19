@@ -3,7 +3,7 @@
 #include<stdio.h>
 int main()
 {
-	char a = -128;
+	char a = -128;//-128 ---> 可以理解为 -0
 	printf("%d", a);
 	return 0;
 }
