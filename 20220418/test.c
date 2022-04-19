@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <assert.h>
 
+int main()
+{
+
+    return 0;
+}   
+
 void swap_arr(int arr[], int sz)
 {
     int left = 0;
@@ -23,7 +29,7 @@ void swap_arr(int arr[], int sz)
     }
 }
 
-int main()
+int main9()
 {
     int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     printf("µ÷ÕûÇ°£º\n");
