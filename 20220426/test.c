@@ -34,7 +34,7 @@ int main()
 			right++;
 		}
 		reverse(left, right - 1);
-		printf("%s\n", arr);
+		//printf("%s\n", arr);
 		if (*right)
 		{
 			//right还没指向\0
