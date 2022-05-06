@@ -9,7 +9,7 @@ struct PCB_type
     int priority;
     int size;
     char content[10];
-    int state;     /* 0表示不在内存，1表示在内存，2表示挂起*/
+    int state;     // 0表示不在内存，1表示在内存，2表示挂起
 };
 struct PCB_type storage[20];
 int num = 0, hang_up = 0, bj, i, j, pid;/*定义相关参数变量*/
@@ -55,6 +55,7 @@ void run()
     if (bj == 0)
         printf("\n当前没有运行该进程\n");/*标记为0，表示该进程未创建于内存中*/
 }
+
 /********************换出进程***************************/
 
 void swap_out()
@@ -78,8 +79,13 @@ void swap_out()
                 printf("\n该进程已成功挂起换出\n");
             }
             else if (storage[i].state == 0)
+            {
                 printf("\n要换出的进程不存在\n");
-            else printf("\n要换出的进程已经被挂起\n");
+            }
+            else 
+            {
+                printf("\n要换出的进程已经被挂起\n");
+            }
             bj = 1; break;
         }
     }
@@ -114,8 +120,9 @@ void kill()
             else
             {
                 printf("\n要杀死的进程已经被挂起\n");/*剩余状态为2，挂起*/
-                bj = 1; break;
             }
+            bj = 1; break;
+           
         }
     }
     if (bj == 0) 
@@ -124,62 +131,64 @@ void kill()
     }
  }
     /********************唤醒进程***************************/
-    void rouse()
+void rouse()
+{
+    if (num == 0)
     {
-        if (num == 0)
+        printf("当前没有运行的进程\n");
+        return;
+    }
+    if (hang_up == 0)  /*hang_up=0,表示没有挂起的进程*/
+    {
+        printf("\n当前没有换出的进程\n");
+        return;
+    }
+    printf("\n请输入要唤醒的进程的pid值:\n");
+    scanf("%d", &pid);
+    for (i = 0; i < 20; i++) {
+        if (pid == storage[i].pid)
         {
-            printf("当前没有运行的进程\n");
-            return;
-        }
-        if (hang_up == 0)  /*hang_up=0,表示没有挂起的进程*/
-        {
-            printf("\n当前没有换出的进程\n");
-            return;
-        }
-        printf("\n请输入要唤醒的进程的pid值:\n");
-        scanf("%d", &pid);
-        for (i = 0; i < 20; i++) {
-            if (pid == storage[i].pid)
+            if (storage[i].state == 2)
             {
-                if (storage[i].state == 2)
-                {
-                    storage[i].state = 1; /*将该进程的状态设为挂起*/
-                    hang_up--;
-                    num++;
-                    printf("\n该进程已成功唤醒\n");
-                }
-                else if (storage[i].state == 0)
-                    printf("\n要唤醒的进程不存在\n");
-                else printf("\n要唤醒的进程已经在内存中\n");
+                storage[i].state = 1; /*将该进程的状态设为挂起*/
+                hang_up--;
+                num++;
+                printf("\n该进程已成功唤醒\n");
             }
+            else if (storage[i].state == 0)
+                printf("\n要唤醒的进程不存在\n");
+            else printf("\n要唤醒的进程已经在内存中\n");
         }
     }
+}
     /********************主程序***************************/
-    int main()
+int main()
+{
+    int serial, n = 1, i;
+    for (i = 0; i < 20; i++)
     {
-        int serial, n = 1, i;
-        for (i = 0; i < 20; i++)
-            storage[i].state = 0; /*使所有进程都初始设为不在内存中*/
-        while (n) {
-            printf("\n**********************************************");
-            printf("\n*               进程演示系统                 *");
-            printf("\n**********************************************");
-            printf("\n     1.创建新的进程             2.查看运行进程");
-            printf("\n     3.换出某个进程             4.杀死运行进程");
-            printf("\n     5.唤醒某个进程             6.退出程序    ");
-            printf("\n**********************************************");
-            printf("\n请选择(1～6):");
-            scanf("%d", &serial);
-            switch (serial)
-            {
-            case 1: create(); break;
-            case 2:run(); break;
-            case 3:swap_out(); break;
-            case 4:kill(); break;
-            case 5:rouse(); break;
-            case 6:exit(0);
-            default: n = 0;break;
-            }
-        }
-        return 0;
+        storage[i].state = 0; /*使所有进程都初始设为不在内存中*/
     }
+    while (n) {
+        printf("\n**********************************************");
+        printf("\n*               进程演示系统                 *");
+        printf("\n**********************************************");
+        printf("\n     1.创建新的进程             2.查看运行进程");
+        printf("\n     3.换出某个进程             4.杀死运行进程");
+        printf("\n     5.唤醒某个进程             6.退出程序    ");
+        printf("\n**********************************************");
+        printf("\n请选择(1～6):");
+        scanf("%d", &serial);
+        switch (serial)
+        {
+        case 1: create(); break;
+        case 2:run(); break;
+        case 3:swap_out(); break;
+        case 4:kill(); break;
+        case 5:rouse(); break;
+        case 6:exit(0);
+        default: printf("输入错误！"); break;
+        }
+    }
+    return 0;
+}
