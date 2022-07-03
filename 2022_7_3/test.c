@@ -217,20 +217,20 @@ void test3()
 	int a[3][4] = { 0 };
 	printf("%d\n", sizeof(a));				//12*4=48
 	printf("%d\n", sizeof(a[0][0]));		//4
-	printf("%d\n", sizeof(a[0]));			//4\8	
+	printf("%d\n", sizeof(a[0]));			//4\8	 16
 	printf("%d\n", sizeof(a[0] + 1));		//4\8
 	printf("%d\n", sizeof(*(a[0] + 1)));	//4
 	printf("%d\n", sizeof(a + 1));			//4\8
 	printf("%d\n", sizeof(*(a + 1)));		//16
 	printf("%d\n", sizeof(&a[0] + 1));		//4\8
-	printf("%d\n", sizeof(*(&a[0] + 1)));	//4
-	printf("%d\n", sizeof(*a));				//16
-	printf("%d\n", sizeof(a[3]));			//4\8
-
+	printf("%d\n", sizeof(*(&a[0] + 1)));	//16		16
+	printf("%d\n", sizeof(*a));				//16	
+	printf("%d\n", sizeof(a[3]));			//4\8	16
+	//a[0]如果没有放在sizeof里面的话a[0]--->a[0][0]
 		/*总结：
 		数组名的意义：
 		1. sizeof(数组名)，这里的数组名表示整个数组，计算的是整个数组的大小。
-		2. & 数组名，这里的数组名表示整个数组，取出的是整个数组的地址。
+		2. &数组名，这里的数组名表示整个数组，取出的是整个数组的地址。
 		3. 除此之外所有的数组名都表示首元素的地址。*/
 }
 
